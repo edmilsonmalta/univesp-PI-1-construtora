@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página com Menu Flutuante</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            padding-top: 120px;
+            background-color: #f5f5f5;
+        }
+        
+        /* Cabeçalho com logo */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            z-index: 999;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 0px 0;
+        }
+        
+        .logo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 0px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            height: 70px;
+        }
+        
+        /* Estilos do menu flutuante */
+        .floating-menu {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            background-color: #2c3e50;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .menu-container {
+            display: flex;
+            justify-content: flex-start;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .menu-item {
+            position: relative;
+        }
+        
+        .menu-item > a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px;
+            transition: background-color 0.3s;
+        }
+        
+        .menu-item > a:hover {
+            background-color: #34495e;
+        }
+        
+        /* Estilos dos submenus */
+        .submenu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #34495e;
+            min-width: 200px;
+            display: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .menu-item:hover .submenu {
+            display: block;
+        }
+        
+        .submenu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 12px 15px;
+            border-bottom: 1px solid #2c3e50;
+            transition: background-color 0.3s;
+        }
+        
+        .submenu a:hover {
+            background-color: #3d566e;
+        }
+        
+        /* Área do iframe */
+        .iframe-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            min-height: 500px;
+        }
+        
+        .content-iframe {
+            width: 100%;
+            height: 100%;
+            min-height: 500px;
+            border: none;
+            border-radius: 5px;
+        }
+        
+        .default-content {
+            padding: 20px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Cabeçalho com Logo -->
+    <header class="header">
+        <div class="logo-container">
+            <img src="../logo.png" alt="Logo da Empresa" class="logo">
+          <h1 align="center">Área Administrativa</h1>
+        </div>
+    </header>
+    
+    <!-- Menu Flutuante -->
+    <nav class="floating-menu">
+        <div class="menu-container">
+            <div class="menu-item">
+                <a href="#" onclick="loadContent('default')">Início</a>
+            </div>
+			<div class="menu-item" id="services-menu">
+                <a href="#" onclick="loadContent('cad-cliente.php')">Cliente</a>
+                <div class="submenu" id="services-submenu">
+                    <a href="#" onclick="loadContent('cad-cliente.php')">Cadastrar Clientes</a>
+					<a href="#" onclick="loadContent('validar-cadastro.php')">Validar Cadastro</a>
+                </div>
+            </div>
+            
+            <div class="menu-item" id="services-menu">
+                <a href="#" onclick="loadContent(lista_requisicoes.php')">Requisições</a>
+                <div class="submenu" id="services-submenu">
+                    <a href="#" onclick="loadContent('lista_requisicoes.php')">Listar Requisições</a>
+					<a href="#" onclick="loadContent('requisicao_obra_adm.php')">Fazer Requisições</a>
+                </div>
+            </div>
+            
+            <div class="menu-item" id="about-menu">
+                <a href="#" onclick="loadContent('lista_colaboradores.php')">Cadastro Colaborador</a>
+                <div class="submenu" id="about-submenu">
+					<a href="#" onclick="loadContent('lista_colaboradores.php')">Visualizar Colabores</a>
+                    <a href="#" onclick="loadContent('cadastro_colaborador.php')">Cadastrar Colaborador</a>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <a href="#" onclick="loadContent('agendamento_colaborador.php')">Agendamentos</a>
+				<div class="submenu" id="about-submenu">
+					<a href="#" onclick="loadContent('agendamento_colaborador.php')">Agendamentos por Colaborador</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Área de Conteúdo com Iframe -->
+    <div class="iframe-container">
+        <div id="default-content" class="default-content">
+            <h1>Bem-vindo ao nosso site</h1>
+            <p>Selecione um item no menu para carregar o conteúdo correspondente.</p>
+        </div>
+        <iframe id="content-iframe" class="content-iframe hidden" src=""></iframe>
+    </div>
+    
+    <script>
+        function loadContent(pageUrl) {
+            const iframe = document.getElementById('content-iframe');
+            const defaultContent = document.getElementById('default-content');
+            
+            if (pageUrl === 'default') {
+                iframe.classList.add('hidden');
+                defaultContent.classList.remove('hidden');
+            } else {
+                defaultContent.classList.add('hidden');
+                iframe.classList.remove('hidden');
+                iframe.src = pageUrl;
+            }
+            
+            // Retorna true para permitir que o hover continue funcionando
+            return true;
+        }
+        
+        // Adiciona eventos para melhorar a experiência com submenus
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuItems = document.querySelectorAll('.menu-item');
+            
+            menuItems.forEach(item => {
+                // Mantém o submenu aberto quando o mouse está sobre ele
+                item.addEventListener('mouseenter', function() {
+                    const submenu = this.querySelector('.submenu');
+                    if (submenu) submenu.style.display = 'block';
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    const submenu = this.querySelector('.submenu');
+                    if (submenu) submenu.style.display = 'none';
+                });
+            });
+            
+            // Esconde o iframe inicialmente
+            document.getElementById('content-iframe').classList.add('hidden');
+        });
+    </script>
+</body>
+</html>

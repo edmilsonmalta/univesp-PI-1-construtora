@@ -1,0 +1,77 @@
+/* Reset básico e estilos gerais */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+/* Estilo do cabeçalho e logo */
+header {
+    background-color: #333;
+    padding: 20px;
+    text-align: center;
+}
+
+.logo img {
+    max-width: 150px;
+    height: auto;
+}
+
+/* Estilo do menu suspenso */
+.dropdown-menu ul {
+    list-style: none;
+    background-color: #444;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.dropdown-menu li {
+    position: relative;
+}
+
+.dropdown-menu li a {
+    display: block;
+    color: white;
+    padding: 15px 20px;
+    text-decoration: none;
+    text-align: center;
+}
+
+.dropdown-menu li a:hover {
+    background-color: #555;
+}
+
+/* Submenu (dropdown) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #333;
+    min-width: 160px;
+    z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content li a {
+    padding: 12px 16px;
+}
+
+.dropdown-content li a:hover {
+    background-color: #444;
+}
+
+/* Conteúdo principal (opcional) */
+main {
+    padding: 20px;
+    text-align: center;
+}
+#iframe {
+    width: 100%;
+    height: 600px;
+    border: none;
+}
