@@ -216,7 +216,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="links">
                 <a href="recuperar_senha.php">Esqueci minha senha</a>
                 <span> | </span>
-                <a href="cadastro_cliente.php">Cadastre-se</a>
+                <a href="./admin/cad-cliente.php">Cadastre-se</a>
             </div>
         </form>
     </div>
