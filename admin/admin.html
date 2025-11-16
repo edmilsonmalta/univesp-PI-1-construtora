@@ -5,71 +5,92 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página com Menu Flutuante</title>
     <style>
-        * {
+        /* RESET COMPLETO */
+        html, body {
             margin: 0;
             padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        * {
             box-sizing: border-box;
             font-family: Arial, sans-serif;
         }
         
         body {
-            padding-top: 120px;
+            display: flex;
+            flex-direction: column;
             background-color: #f5f5f5;
         }
         
         /* Cabeçalho com logo */
         .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
+            height: 70px;
             background-color: white;
-            z-index: 999;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 0px 0;
+            flex-shrink: 0;
+            z-index: 999;
         }
         
         .logo-container {
-            max-width: 1200px;
+            max-width: 100%;
             margin: 0 auto;
-            padding: 0 0px;
+            padding: 0 20px;
             display: flex;
             align-items: center;
+            justify-content: space-between;
+            height: 100%;
         }
         
         .logo {
-            height: 70px;
+            height: 50px;
         }
         
+        /* Botão menu mobile */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #2c3e50;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 10px;
+        }
+
         /* Estilos do menu flutuante */
         .floating-menu {
-            position: fixed;
-            top: 70px;
-            left: 0;
-            width: 100%;
+            height: 50px;
             background-color: #2c3e50;
-            z-index: 1000;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            flex-shrink: 0;
+            z-index: 1000;
         }
         
         .menu-container {
             display: flex;
             justify-content: flex-start;
-            max-width: 1200px;
+            max-width: 100%;
             margin: 0 auto;
             padding: 0 20px;
+            height: 100%;
         }
         
         .menu-item {
             position: relative;
+            height: 100%;
         }
         
         .menu-item > a {
-            display: block;
+            display: flex;
+            align-items: center;
+            height: 100%;
             color: white;
             text-decoration: none;
-            padding: 15px;
+            padding: 0 15px;
             transition: background-color 0.3s;
+            white-space: nowrap;
         }
         
         .menu-item > a:hover {
@@ -85,6 +106,7 @@
             min-width: 200px;
             display: none;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1001;
         }
         
         .menu-item:hover .submenu {
@@ -104,76 +126,243 @@
             background-color: #3d566e;
         }
         
-        /* Área do iframe */
+        /* ÁREA DO IFRAME - SOLUÇÃO DEFINITIVA */
         .iframe-container {
-            max-width: 1200px;
-            margin: 20px auto;
+            flex: 1;
             background-color: white;
-            border-radius: 5px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            min-height: 500px;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            min-height: 0; /* Importante para flexbox */
+        }
+        
+        .iframe-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
         
         .content-iframe {
             width: 100%;
             height: 100%;
-            min-height: 500px;
             border: none;
-            border-radius: 5px;
+            display: block;
         }
         
         .default-content {
-            padding: 20px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background-color: white;
         }
         
         .hidden {
+            display: none !important;
+        }
+
+        /* ===== ESTILOS RESPONSIVOS ===== */
+        
+        /* Tablets */
+        @media (max-width: 1024px) {
+            .menu-container {
+                flex-wrap: wrap;
+            }
+            
+            .menu-item > a {
+                padding: 0 10px;
+                font-size: 14px;
+            }
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .header {
+                height: 60px;
+            }
+            
+            .logo-container {
+                padding: 0 15px;
+            }
+            
+            .logo {
+                height: 40px;
+            }
+            
+            .logo-container h1 {
+                font-size: 18px;
+                margin-left: 10px;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .floating-menu {
+                position: fixed;
+                top: 60px;
+                left: -100%;
+                width: 280px;
+                height: calc(100vh - 60px);
+                transition: left 0.3s ease;
+                overflow-y: auto;
+                z-index: 1002;
+            }
+            
+            .floating-menu.active {
+                left: 0;
+            }
+            
+            .menu-container {
+                flex-direction: column;
+                padding: 0;
+                height: auto;
+            }
+            
+            .menu-item {
+                width: 100%;
+                height: auto;
+                border-bottom: 1px solid #34495e;
+            }
+            
+            .menu-item > a {
+                padding: 15px 20px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                height: auto;
+                min-height: 50px;
+            }
+            
+            .menu-item > a::after {
+                content: '›';
+                font-size: 18px;
+                transition: transform 0.3s;
+            }
+            
+            .menu-item.active > a::after {
+                transform: rotate(90deg);
+            }
+            
+            .submenu {
+                position: static;
+                display: none;
+                width: 100%;
+                background-color: #2c3e50;
+                box-shadow: none;
+            }
+            
+            .menu-item.active .submenu {
+                display: block;
+            }
+            
+            .submenu a {
+                padding: 12px 30px;
+                border-bottom: 1px solid #2c3e50;
+            }
+        }
+
+        /* Mobile pequeno */
+        @media (max-width: 480px) {
+            .header {
+                height: 55px;
+            }
+            
+            .floating-menu {
+                top: 55px;
+                height: calc(100vh - 55px);
+            }
+            
+            .logo {
+                height: 35px;
+            }
+            
+            .logo-container h1 {
+                font-size: 16px;
+            }
+            
+            .default-content {
+                padding: 20px 15px;
+            }
+            
+            .default-content h1 {
+                font-size: 24px;
+            }
+        }
+
+        /* Overlay para mobile */
+        .menu-overlay {
             display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 998;
+        }
+        
+        .menu-overlay.active {
+            display: block;
         }
     </style>
 </head>
 <body>
+    <!-- Overlay para fechar menu no mobile -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+    
     <!-- Cabeçalho com Logo -->
     <header class="header">
         <div class="logo-container">
             <img src="../logo.png" alt="Logo da Empresa" class="logo">
-          <h1 align="center">Área Administrativa</h1>
+			<h1 align="center">Área Administrativa</h1>
+            <button class="menu-toggle" id="menuToggle">☰</button>
         </div>
     </header>
     
     <!-- Menu Flutuante -->
-    <nav class="floating-menu">
+    <nav class="floating-menu" id="floatingMenu">
         <div class="menu-container">
             <div class="menu-item">
-                <a href="#" onclick="loadContent('default')">Início</a>
+                <a href="#" onclick="loadContent('default'); closeMobileMenu();">Início</a>
             </div>
-			<div class="menu-item" id="services-menu">
-                <a href="#" onclick="loadContent('cad-cliente.php')">Cliente</a>
-                <div class="submenu" id="services-submenu">
-                    <a href="#" onclick="loadContent('cad-cliente.php')">Cadastrar Clientes</a>
-					<a href="#" onclick="loadContent('validar-cadastro.php')">Validar Cadastro</a>
-                </div>
-            </div>
-            
-            <div class="menu-item" id="services-menu">
-                <a href="#" onclick="loadContent(lista_requisicoes.php')">Requisições</a>
-                <div class="submenu" id="services-submenu">
-                    <a href="#" onclick="loadContent('lista_requisicoes.php')">Listar Requisições</a>
-					<a href="#" onclick="loadContent('requisicao_obra_adm.php')">Fazer Requisições</a>
-                </div>
-            </div>
-            
-            <div class="menu-item" id="about-menu">
-                <a href="#" onclick="loadContent('lista_colaboradores.php')">Cadastro Colaborador</a>
-                <div class="submenu" id="about-submenu">
-					<a href="#" onclick="loadContent('lista_colaboradores.php')">Visualizar Colabores</a>
-                    <a href="#" onclick="loadContent('cadastro_colaborador.php')">Cadastrar Colaborador</a>
+            <div class="menu-item">
+                <a href="#" class="menu-link">Cliente</a>
+                <div class="submenu">
+                    <a href="#" onclick="loadContent('cad-cliente.php'); closeMobileMenu();">Cadastrar Clientes</a>
+                    <a href="#" onclick="loadContent('validar-cadastro.php'); closeMobileMenu();">Validar Cadastro</a>
                 </div>
             </div>
             
             <div class="menu-item">
-                <a href="#" onclick="loadContent('agendamento_colaborador.php')">Agendamentos</a>
-				<div class="submenu" id="about-submenu">
-					<a href="#" onclick="loadContent('agendamento_colaborador.php')">Agendamentos por Colaborador</a>
+                <a href="#" class="menu-link">Requisições</a>
+                <div class="submenu">
+                    <a href="#" onclick="loadContent('lista_requisicoes.php'); closeMobileMenu();">Listar Requisições</a>
+                    <a href="#" onclick="loadContent('requisicao_obra_adm.php'); closeMobileMenu();">Fazer Requisições</a>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <a href="#" class="menu-link">Cadastro Colaborador</a>
+                <div class="submenu">
+                    <a href="#" onclick="loadContent('lista_colaboradores.php'); closeMobileMenu();">Visualizar Colabores</a>
+                    <a href="#" onclick="loadContent('cadastro_colaborador.php'); closeMobileMenu();">Cadastrar Colaborador</a>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <a href="#" class="menu-link">Agendamentos</a>
+                <div class="submenu">
+                    <a href="#" onclick="loadContent('agendamento_colaborador.php'); closeMobileMenu();">Agendamentos por Colaborador</a>
                 </div>
             </div>
         </div>
@@ -181,11 +370,14 @@
     
     <!-- Área de Conteúdo com Iframe -->
     <div class="iframe-container">
-        <div id="default-content" class="default-content">
-            <h1>Bem-vindo ao nosso site</h1>
-            <p>Selecione um item no menu para carregar o conteúdo correspondente.</p>
+        <div class="iframe-wrapper">
+            <div id="default-content" class="default-content">
+                <h1>Bem-vindo ao nosso site</h1>
+                <p>Selecione um item no menu para carregar o conteúdo correspondente.</p>
+            <a href="#" onclick="loadContent('lista_requisicoes.php'); closeMobileMenu();"><img src="../WV1467125419W57728eab47eb5.png" width="94" height="100" alt=""/>            </div>
+
+            <iframe id="content-iframe" class="content-iframe hidden" src=""></iframe>
         </div>
-        <iframe id="content-iframe" class="content-iframe hidden" src=""></iframe>
     </div>
     
     <script>
@@ -196,35 +388,118 @@
             if (pageUrl === 'default') {
                 iframe.classList.add('hidden');
                 defaultContent.classList.remove('hidden');
+                iframe.src = ''; // Limpa o iframe
             } else {
                 defaultContent.classList.add('hidden');
                 iframe.classList.remove('hidden');
                 iframe.src = pageUrl;
             }
             
-            // Retorna true para permitir que o hover continue funcionando
+            // Força o redimensionamento do iframe
+            setTimeout(() => {
+                adjustIframeSize();
+            }, 100);
+            
             return true;
+        }
+        
+        // Funções para menu mobile
+        function toggleMobileMenu() {
+            const menu = document.getElementById('floatingMenu');
+            const overlay = document.getElementById('menuOverlay');
+            menu.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+        
+        function closeMobileMenu() {
+            const menu = document.getElementById('floatingMenu');
+            const overlay = document.getElementById('menuOverlay');
+            menu.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+        
+        // Função para ajustar o tamanho do iframe
+        function adjustIframeSize() {
+            const iframe = document.getElementById('content-iframe');
+            const iframeContainer = document.querySelector('.iframe-container');
+            
+            if (iframe && !iframe.classList.contains('hidden')) {
+                // Garante que o iframe ocupe 100% do container
+                iframe.style.width = '100%';
+                iframe.style.height = '100%';
+                iframe.style.display = 'block';
+            }
         }
         
         // Adiciona eventos para melhorar a experiência com submenus
         document.addEventListener('DOMContentLoaded', function() {
             const menuItems = document.querySelectorAll('.menu-item');
+            const menuToggle = document.getElementById('menuToggle');
+            const overlay = document.getElementById('menuOverlay');
             
+            // Evento do botão menu mobile
+            menuToggle.addEventListener('click', toggleMobileMenu);
+            
+            // Evento do overlay para fechar menu
+            overlay.addEventListener('click', closeMobileMenu);
+            
+            // Eventos para desktop
             menuItems.forEach(item => {
-                // Mantém o submenu aberto quando o mouse está sobre ele
+                // Mantém o submenu aberto quando o mouse está sobre ele (desktop)
                 item.addEventListener('mouseenter', function() {
-                    const submenu = this.querySelector('.submenu');
-                    if (submenu) submenu.style.display = 'block';
+                    if (window.innerWidth > 768) {
+                        const submenu = this.querySelector('.submenu');
+                        if (submenu) submenu.style.display = 'block';
+                    }
                 });
                 
                 item.addEventListener('mouseleave', function() {
-                    const submenu = this.querySelector('.submenu');
-                    if (submenu) submenu.style.display = 'none';
+                    if (window.innerWidth > 768) {
+                        const submenu = this.querySelector('.submenu');
+                        if (submenu) submenu.style.display = 'none';
+                    }
                 });
+                
+                // Eventos para mobile
+                const menuLink = item.querySelector('.menu-link');
+                if (menuLink) {
+                    menuLink.addEventListener('click', function(e) {
+                        if (window.innerWidth <= 768) {
+                            e.preventDefault();
+                            // Fecha outros menus abertos
+                            menuItems.forEach(otherItem => {
+                                if (otherItem !== item) {
+                                    otherItem.classList.remove('active');
+                                }
+                            });
+                            // Abre/fecha o menu atual
+                            item.classList.toggle('active');
+                        }
+                    });
+                }
             });
             
             // Esconde o iframe inicialmente
             document.getElementById('content-iframe').classList.add('hidden');
+            
+            // Ajusta o iframe quando a janela é redimensionada
+            window.addEventListener('resize', function() {
+                adjustIframeSize();
+                
+                if (window.innerWidth > 768) {
+                    closeMobileMenu();
+                    // Remove classes active dos itens do menu
+                    menuItems.forEach(item => {
+                        item.classList.remove('active');
+                    });
+                }
+            });
+
+            // Ajusta o iframe periodicamente para garantir que fique correto
+            setInterval(adjustIframeSize, 500);
+            
+            // Ajusta o iframe quando a página carrega
+            setTimeout(adjustIframeSize, 1000);
         });
     </script>
 </body>

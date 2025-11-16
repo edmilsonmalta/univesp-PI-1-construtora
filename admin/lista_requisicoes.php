@@ -61,230 +61,297 @@ $opcoes_status = ['Pendente', 'Em análise', 'Aprovada', 'Em andamento', 'Conclu
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="mobile-web-app-capable" content="yes">
     <title>Lista de Obras Requisitadas</title>
     <style>
+    * {
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 10px;
+        background-color: #f5f5f5;
+        font-size: 14px;
+    }
+    
+    .container {
+        max-width: 100%;
+        margin: 0 auto;
+        background: #fff;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        overflow-x: auto;
+    }
+    
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 1.5em;
+    }
+    
+    /* Tabela responsiva */
+    .table-container {
+        overflow-x: auto;
+        margin-top: 15px;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 800px; /* Largura mínima para manter legibilidade */
+    }
+    
+    th, td {
+        padding: 10px 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        font-size: 13px;
+    }
+    
+    th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+        white-space: nowrap;
+    }
+    
+    tr:hover {
+        background-color: #f9f9f9;
+    }
+    
+    /* Botões responsivos */
+    .btn {
+        display: inline-block;
+        padding: 6px 10px;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        font-size: 12px;
+        margin: 2px 0;
+        text-align: center;
+        width: 100%;
+    }
+    
+    .btn-agendar {
+        background-color: #2196F3;
+    }
+    
+    .btn-ver-agendamento {
+        background-color: #17a2b8;
+    }
+    
+    .btn-editar {
+        background-color: #ffc107;
+        color: #000;
+    }
+    
+    .btn-visualizar {
+        background-color: #6c757d;
+    }
+    
+    .btn-financeiro {
+        background-color: #28a745;
+    }
+    
+    /* Status */
+    .status {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 3px;
+        font-size: 11px;
+        font-weight: bold;
+        white-space: nowrap;
+    }
+    
+    .status-pendente { background-color: #ff9800; color: white; }
+    .status-aprovada { background-color: #4CAF50; color: white; }
+    .status-cancelada { background-color: #f44336; color: white; }
+    .status-concluida { background-color: #007bff; color: white; }
+    .status-em-analise { background-color: #17a2b8; color: white; }
+    .status-em-andamento { background-color: #6610f2; color: white; }
+    
+    /* Paginação responsiva */
+    .paginacao {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 20px;
+        gap: 5px;
+    }
+    
+    .paginacao a {
+        padding: 8px 12px;
+        text-decoration: none;
+        color: #2196F3;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 13px;
+        min-width: 40px;
+        text-align: center;
+    }
+    
+    .paginacao a.active {
+        background-color: #2196F3;
+        color: white;
+        border: 1px solid #2196F3;
+    }
+    
+    /* Barra de pesquisa */
+    .search-container {
+        margin-bottom: 15px;
+        display: flex;
+        gap: 8px;
+        flex-direction: column;
+    }
+    
+    @media (min-width: 768px) {
+        .search-container {
+            flex-direction: row;
+        }
+    }
+    
+    .search-container input {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+    
+    .search-container button {
+        padding: 10px 15px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+    
+    /* Informações de agendamento */
+    .info-agendamento {
+        font-size: 11px;
+        line-height: 1.4;
+    }
+    
+    .info-agendamento strong {
+        display: inline-block;
+        min-width: 60px;
+    }
+    
+    /* Ações em coluna */
+    .acoes {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        min-width: 120px;
+    }
+    
+    /* Dropdown responsivo */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 140px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1000;
+        border-radius: 4px;
+        left: 0;
+        right: auto;
+    }
+    
+    @media (max-width: 480px) {
+        .dropdown-content {
+            right: 0;
+            left: auto;
+        }
+    }
+    
+    .dropdown-content button {
+        color: black;
+        padding: 8px 12px;
+        text-decoration: none;
+        display: block;
+        font-size: 12px;
+        width: 100%;
+        text-align: left;
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+    
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+    
+    .status-dropdown {
+        cursor: pointer;
+        position: relative;
+    }
+    
+    .status-dropdown:hover {
+        text-decoration: underline;
+    }
+    
+    /* Layout para telas maiores */
+    @media (min-width: 768px) {
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
             padding: 20px;
-            background-color: #f5f5f5;
+            font-size: 16px;
         }
+        
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: #fff;
             padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
+        
         th, td {
             padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
-        tr:hover {
-            background-color: #f9f9f9;
-        }
-        .btn {
-            display: inline-block;
-            padding: 8px 12px;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            border: none;
-            cursor: pointer;
             font-size: 14px;
-            margin: 2px;
         }
-        .btn:hover {
-            opacity: 0.9;
-        }
-        .btn-agendar {
-            background-color: #2196F3;
-        }
-        .btn-ver-agendamento {
-            background-color: #17a2b8;
-        }
-        .btn-editar {
-            background-color: #ffc107;
-        }
-        .btn-visualizar {
-            background-color: #6c757d;
-        }
-        .btn-financeiro {
-            background-color: #28a745;
-        }
-        .status {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 3px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-        .status-pendente {
-            background-color: #ff9800;
-            color: white;
-        }
-        .status-aprovada {
-            background-color: #4CAF50;
-            color: white;
-        }
-        .status-cancelada {
-            background-color: #f44336;
-            color: white;
-        }
-        .status-concluida {
-            background-color: #007bff;
-            color: white;
-        }
-        .paginacao {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        .paginacao a {
-            padding: 8px 16px;
-            margin: 0 4px;
-            text-decoration: none;
-            color: #2196F3;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .paginacao a.active {
-            background-color: #2196F3;
-            color: white;
-            border: 1px solid #2196F3;
-        }
-        .paginacao a:hover:not(.active) {
-            background-color: #ddd;
-        }
-        .search-container {
-            margin-bottom: 20px;
-            display: flex;
-            gap: 10px;
-        }
-        .search-container input {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .search-container button {
-            padding: 10px 15px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .info-agendamento {
-            font-size: 12px;
-            line-height: 1.4;
-        }
-        .info-agendamento strong {
-            display: inline-block;
-            min-width: 80px;
-        }
-        .acoes {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-		.dropdown {
-            position: relative;
-            display: inline-block;
-        }
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            border-radius: 4px;
-        }
-        .dropdown-content a {
-            color: black;
+        
+        .btn {
             padding: 8px 12px;
-            text-decoration: none;
-            display: block;
             font-size: 13px;
+            width: auto;
         }
-        .dropdown-content a:hover {
-            background-color: #f1f1f1;
+        
+        .acoes {
+            flex-direction: row;
+            flex-wrap: wrap;
         }
-        .dropdown:hover .dropdown-content {
-            display: block;
+    }
+    
+    @media (min-width: 1024px) {
+        .container {
+            max-width: 1200px;
         }
-        .status-dropdown {
-            cursor: pointer;
-            position: relative;
+        
+        table {
+            min-width: auto;
         }
-        .status-dropdown:hover {
-            text-decoration: underline;
-        }
-        form {
-            margin: 0;
-            padding: 0;
-        }
-        .status-concluida {
-            background-color: #007bff;
-            color: white;
-        }
-        .status-em-analise {
-            background-color: #17a2b8;
-            color: white;
-        }
-        .status-em-andamento {
-            background-color: #6610f2;
-            color: white;
-        }
-		.dropdown-content button {
-    color: black;
-    padding: 8px 12px;
-    text-decoration: none;
-    display: block;
-    font-size: 13px;
-    width: 100%;
-    text-align: left;
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
-.dropdown-content button:hover {
-    background-color: #f1f1f1;
-}
-
-.dropdown-content form {
-    margin: 0;
-    padding: 0;
-}
-    </style>
+    }
+</style>
 </head>
 <body>
  <div class="container">
         <h1>Obras Requisitadas</h1>
         
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Pesquisar por cliente, descrição...">
-            <button type="button" class="btn" onclick="searchTable()">Pesquisar</button>
-        </div>
-        
+		<div class="search-container">
+        	<input type="text" id="searchInput" placeholder="Pesquisar por cliente, descrição...">
+       		 <button type="button" class="btn" onclick="searchTable()">Pesquisar</button>
+   		 </div>
+        <div class="table-container">
         <table id="obrasTable">
             <thead>
                 <tr>
@@ -356,7 +423,8 @@ $opcoes_status = ['Pendente', 'Em análise', 'Aprovada', 'Em andamento', 'Conclu
                 <?php endforeach; ?>
             </tbody>
         </table>
-
+	 </div>
+	 
         <!-- Paginação -->
 <div class="paginacao">
             <?php if ($pagina_atual > 1): ?>
@@ -412,6 +480,24 @@ $opcoes_status = ['Pendente', 'Em análise', 'Aprovada', 'Em andamento', 'Conclu
                 searchTable();
             }
         });
+		
+		 // Fechar dropdown ao tocar fora (para mobile)
+    document.addEventListener('touchstart', function(event) {
+        const dropdowns = document.querySelectorAll('.dropdown-content');
+        dropdowns.forEach(function(dropdown) {
+            if (!dropdown.parentElement.contains(event.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+    });
+
+    // Melhorar toque nos botões
+    document.addEventListener('DOMContentLoaded', function() {
+        const buttons = document.querySelectorAll('.btn');
+        buttons.forEach(function(btn) {
+            btn.style.cursor = 'pointer';
+        });
+    });
     </script>
 </body>
 </html>
